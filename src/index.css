@@ -76,6 +76,12 @@ body::-webkit-scrollbar,
   --color-app-text-dim: var(--text-secondary);
   --color-app-border: var(--border-color);
   --color-app-surface: var(--surface-color);
+  --animate-fade-in: fade-in 0.4s ease-out backwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 :root {
@@ -799,7 +805,6 @@ select,
 [class*="warning-card"] {
   opacity: 0;
   transform: translateZ(0);
-  will-change: backdrop-filter, opacity;
   isolation: isolate;
   background: var(--surface-color) !important;
   backdrop-filter: blur(20px) saturate(180%);

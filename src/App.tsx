@@ -169,36 +169,6 @@ const enableAnimations = () => {
 const disableAllAnimations = killAnimations;
 const enableAllAnimations = enableAnimations;
 
-// Step 4: Throttled rAF loop for lightweight animation coordination
-if (typeof window !== 'undefined') {
-  let lastFrame = 0;
-  const FPS_LIMIT = 30;
-  const FRAME_MIN_TIME = 1000 / FPS_LIMIT;
-
-  const updateParticles = () => {
-    // Coordinate/sync particles at 30fps
-  };
-
-  const updateWeatherFX = () => {
-    // Coordinate/sync weatherFX at 30fps
-  };
-
-  const animationLoop = (timestamp: number) => {
-    if (timestamp - lastFrame < FRAME_MIN_TIME) {
-      requestAnimationFrame(animationLoop);
-      return;
-    }
-    lastFrame = timestamp;
-
-    updateParticles();
-    updateWeatherFX();
-
-    requestAnimationFrame(animationLoop);
-  };
-
-  requestAnimationFrame(animationLoop);
-}
-
 // Step 6: Power savings / reduced motion animation check
 if (typeof window !== 'undefined') {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
