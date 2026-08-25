@@ -1,8 +1,29 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
+import {Capacitor} from '@capacitor/core';
+import {StatusBar, Style} from '@capacitor/status-bar';
 import App from './App.tsx';
 import './index.css';
 import {ErrorBoundary} from './components/ErrorBoundary.tsx';
+
+async function initNativeSystemBars() {
+  try {
+    if (!Capacitor.isNativePlatform()) return;
+    await StatusBar.setOverlaysWebView({overlay: true});
+    const syncIcons = () => {
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      StatusBar.setStyle({style: dark ? Style.Light : Style.Dark}).catch(() => {});
+    };
+    syncIcons();
+    new MutationObserver(syncIcons).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+  } catch {
+    return;
+  }
+}
+void initNativeSystemBars();
 
 window.addEventListener('error', (event) => {
   const msg = event.message?.toLowerCase() || '';

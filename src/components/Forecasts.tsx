@@ -405,7 +405,7 @@ function HourlyForecastBase({ weather, settings }: ForecastProps) {
                           "text-[15px] font-medium tracking-tight mt-1.5",
                           isNow ? "text-app-text font-semibold" : "text-app-text-dim"
                         )}>
-                          {formatTemp(item.temp, settings.unitTemp)}Â°
+                          {formatTemp(item.temp, settings.unitTemp)}°
                         </span>
                       </div>
                     );
@@ -512,7 +512,7 @@ function HourlyForecastBase({ weather, settings }: ForecastProps) {
                 "text-[16px] font-light relative z-10",
                 isNow ? "font-medium text-app-text" : "text-app-text"
               )}>
-                {formatTemp(item.temp, settings.unitTemp)}Â°
+                {formatTemp(item.temp, settings.unitTemp)}°
               </span>
             </div>
           );
@@ -600,10 +600,10 @@ function DailyForecastBase({ weather, settings, onOpenDetailed }: DailyForecastP
 
                   <div className="flex items-center gap-4 w-20 justify-end shrink-0">
                     <span className="text-[14px] font-semibold text-app-text-dim text-right">
-                      {formatTemp(dayMin, settings.unitTemp)}Â°
+                      {formatTemp(dayMin, settings.unitTemp)}°
                     </span>
                     <span className="text-[14px] font-semibold text-app-text text-right">
-                      {formatTemp(dayMax, settings.unitTemp)}Â°
+                      {formatTemp(dayMax, settings.unitTemp)}°
                     </span>
                   </div>
                 </div>
@@ -626,7 +626,7 @@ function DailyForecastBase({ weather, settings, onOpenDetailed }: DailyForecastP
                 </div>
 
                 <span className="text-[14px] font-semibold text-app-text-dim w-8 text-right shrink-0">
-                  {formatTemp(dayMin, settings.unitTemp)}Â°
+                  {formatTemp(dayMin, settings.unitTemp)}°
                 </span>
 
                 <div className="flex-1 max-w-[80px] px-2 flex items-center justify-center min-w-[60px]">
@@ -650,7 +650,7 @@ function DailyForecastBase({ weather, settings, onOpenDetailed }: DailyForecastP
                 </div>
 
                 <span className="text-[14px] font-semibold text-app-text w-8 text-left shrink-0">
-                  {formatTemp(dayMax, settings.unitTemp)}Â°
+                  {formatTemp(dayMax, settings.unitTemp)}°
                 </span>
               </div>
             );
