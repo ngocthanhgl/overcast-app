@@ -22,7 +22,7 @@ import DailyForecastDetail from './components/DailyForecastDetail';
 import AtmosphereCanvas from './components/AtmosphereCanvas';
 import { Haptic } from './lib/haptics';
 import { format } from 'date-fns';
-import { Translate, fetchDynamicTranslation } from './lib/translations';
+import { Translate, fetchDynamicTranslation, useTranslatedText } from './lib/translations';
 import { 
   NotifSettings, 
   checkWeatherAlerts, 
@@ -2267,6 +2267,7 @@ export default function App() {
 
   const activeWeather = state.weatherData[state.activeLocationIndex];
   const activeLocation = state.locations[state.activeLocationIndex];
+  const cityNameText = useTranslatedText(activeLocation?.name || 'Loading...', state.settings.language || 'en');
 
   // Sync background weather gradient on active location/weather data change
   useEffect(() => {
@@ -3205,14 +3206,14 @@ export default function App() {
                 {state.locations.length > 0 && (
                   <motion.div 
                     key={`city-header-${state.activeLocationIndex}`}
-                    initial={{ opacity: 0, scale: 0.96, y: 3 }}
+                    initial={{ opacity: 0, y: 3 }}
                     animate={{ 
                       opacity: (state.showSettings || showCityManager || showRadarMap) ? 0 : 1, 
-                      scale: (state.showSettings || showCityManager || showRadarMap) ? 0.96 : 1, 
                       y: (state.showSettings || showCityManager || showRadarMap) ? -3 : 0 
                     }}
-                    exit={{ opacity: 0, scale: 0.96, y: -3 }}
-                    transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    exit={{ opacity: 0, y: -3 }}
+                    transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    style={{ willChange: 'transform, opacity' }}
                     className="flex flex-col items-center justify-center"
                   >
                     <div className="flex items-center justify-center pointer-events-auto select-none gap-1.5 min-w-0 max-w-full">
@@ -3223,11 +3224,7 @@ export default function App() {
                           </svg>
                         )}
                         <span id="city-name" className={cn("text-[17px] font-semibold transition-colors duration-300 min-w-0 truncate", state.settings.colorTheme === 'pink' ? "text-white" : "text-app-text")}>
-                          {activeLocation?.name ? (
-                            <Translate text={activeLocation.name} lang={state.settings.language || 'en'} />
-                          ) : (
-                            <Translate text="Loading..." lang={state.settings.language || 'en'} />
-                          )}
+                          {cityNameText}
                         </span>
                       </div>
                       <div className="flex items-center justify-center shrink-0">
