@@ -38,6 +38,11 @@ jobs:
           npx cap add android
           npx cap sync android
 
+      - name: Generate app icons and splash
+        run: |
+          npm install --no-save @capacitor/assets
+          npx capacitor-assets generate --android --iconBackgroundColor '#dbe4eb'
+
       - name: Decode release keystore
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
