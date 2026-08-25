@@ -155,7 +155,7 @@ function patchHighRefreshRate(androidRoot) {
     '            window.setNavigationBarContrastEnforced(false);',
     '        }',
     '        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {',
-    '            android.view.Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();',
+    '            android.view.Display display = ((android.view.WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();',
     '            android.view.Display.Mode currentMode = display.getMode();',
     '            int bestModeId = currentMode.getModeId();',
     '            float bestRate = currentMode.getRefreshRate();',
