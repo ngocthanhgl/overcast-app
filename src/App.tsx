@@ -3200,7 +3200,7 @@ export default function App() {
 
 
             {/* City Name & Pagination - Center */}
-            <div className="absolute top-[calc(env(safe-area-inset-top,24px)+36px)] flex flex-col items-center pointer-events-none mt-2" style={{ left: '50%', transform: 'translateX(-50%)' }}>
+            <div className="absolute top-[24px] left-1/2 -translate-x-1/2 w-[calc(100%-160px)] max-w-[230px] flex flex-col items-center pointer-events-none mt-2">
               <AnimatePresence mode="wait">
                 {state.locations.length > 0 && (
                   <motion.div 
@@ -3215,14 +3215,14 @@ export default function App() {
                     transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
                     className="flex flex-col items-center justify-center"
                   >
-                    <div className="flex items-center justify-center relative pointer-events-auto select-none gap-1.5">
+                    <div className="flex items-center justify-center pointer-events-auto select-none gap-1.5 min-w-0 max-w-full">
                       <div className="flex items-center gap-1.5">
                         {activeLocation?.isCurrentLocation && (
                           <svg viewBox="0 0 24 24" className={cn("w-3.5 h-3.5 shrink-0", state.settings.colorTheme === 'pink' ? "text-white" : "text-app-text")} fill="currentColor">
                             <path fillRule="evenodd" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" clipRule="evenodd" />
                           </svg>
                         )}
-                        <span id="city-name" className={cn("text-[17px] font-semibold transition-colors duration-300", state.settings.colorTheme === 'pink' ? "text-white" : "text-app-text")}>
+                        <span id="city-name" className={cn("text-[17px] font-semibold transition-colors duration-300 min-w-0 truncate", state.settings.colorTheme === 'pink' ? "text-white" : "text-app-text")}>
                           {activeLocation?.name ? (
                             <Translate text={activeLocation.name} lang={state.settings.language || 'en'} />
                           ) : (
@@ -3230,7 +3230,7 @@ export default function App() {
                           )}
                         </span>
                       </div>
-                      <div className="absolute left-full ml-1.5 flex items-center justify-center">
+                      <div className="flex items-center justify-center shrink-0">
                         <button 
                           onClick={() => {
                             Haptic.medium(state.settings.hapticEnabled);
