@@ -29,8 +29,8 @@ jobs:
       - name: Build web app
         run: npm run build
 
-      - name: Install Capacitor (CI only)
-        run: npm install --no-save @capacitor/core@^6 @capacitor/cli@^6 @capacitor/android@^6
+      - name: Install Capacitor and assets tool (CI only)
+        run: npm install --no-save @capacitor/core@^6 @capacitor/cli@^6 @capacitor/android@^6 @capacitor/assets
 
       - name: Init Capacitor and add Android platform
         run: |
@@ -39,9 +39,7 @@ jobs:
           npx cap sync android
 
       - name: Generate app icons and splash
-        run: |
-          npm install --no-save @capacitor/assets
-          npx capacitor-assets generate --android --iconBackgroundColor '#dbe4eb'
+        run: npx capacitor-assets generate --android --iconBackgroundColor '#dbe4eb'
 
       - name: Decode release keystore
         env:
