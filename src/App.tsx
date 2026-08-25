@@ -2838,6 +2838,17 @@ export default function App() {
 
   const isAnyModalOpen = state.showSettings || showCityManager || showRadarMap || showSearch || showDailyForecastDetail;
 
+  // Android hardware back button: route to in-app back handler when any screen/modal is open
+  useEffect(() => {
+    const w = window as unknown as { __overcastBackHandler?: () => void };
+    if (isAnyModalOpen || showDailyForecastDetail) {
+      w.__overcastBackHandler = handleBack;
+    } else {
+      delete w.__overcastBackHandler;
+    }
+    return () => { delete w.__overcastBackHandler; };
+  }, [isAnyModalOpen, showDailyForecastDetail, handleBack]);
+
   const weatherContent = React.useMemo(() => {
     if (!activeWeather || !activeLocation) return null;
     
@@ -3035,8 +3046,28 @@ export default function App() {
       className="min-h-screen bg-app-bg text-app-text font-sans selection:bg-app-text/20 transition-colors duration-500 relative"
     >
       {/* Background is clean light theme */}
-      <div 
-        id="ui-overlay" 
+      {/* Status bar scrim — blurs content that scrolls under system status bar */}
+      <div
+        id="status-bar-scrim"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '100%',
+          maxWidth: '390px',
+          height: 'max(36px, calc(env(safe-area-inset-top) + 8px))',
+          pointerEvents: 'none',
+          zIndex: 95,
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          background: 'linear-gradient(to bottom, rgba(var(--bg-primary-rgb), 0.5), transparent)',
+          WebkitMaskImage: 'linear-gradient(to bottom, black 55%, transparent)',
+          maskImage: 'linear-gradient(to bottom, black 55%, transparent)',
+        }}
+      />
+      <div
+        id="ui-overlay"
         className={cn(
           "fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-[100] pointer-events-none pt-[env(safe-area-inset-top)] transition-all duration-350 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]",
           isAnyModalOpen ? "opacity-0 pointer-events-none scale-[0.96]" : "opacity-100"
@@ -3097,7 +3128,7 @@ export default function App() {
             }}
           >
             <motion.div className={cn(
-              "absolute left-6 top-[calc(env(safe-area-inset-top,24px)+36px)]",
+              "absolute left-6 top-[24px]",
               (state.showSettings || showCityManager || showRadarMap) ? "pointer-events-none" : "pointer-events-auto"
             )}>
               <motion.button 
@@ -3132,7 +3163,7 @@ export default function App() {
 
             {/* Settings Button - Top Right */}
             <motion.div className={cn(
-              "absolute right-6 top-[calc(env(safe-area-inset-top,24px)+36px)] z-30",
+              "absolute right-6 top-[24px] z-30",
               (state.showSettings || showCityManager || showRadarMap) ? "pointer-events-none" : "pointer-events-auto"
             )}>
               <motion.button 
@@ -3391,6 +3422,16 @@ export default function App() {
       </AnimatePresence>
 
       <AnimatePresence>
+        {showRadarMap && (
+          <motion.div
+            key="radar-scrim"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="fixed inset-0 z-[119] bg-app-bg/60 backdrop-blur-md pointer-events-none"
+          />
+        )}
         {showRadarMap && (
           <motion.div
             key="radar-map-root"

@@ -124,6 +124,12 @@ function patchEdgeToEdge(androidRoot) {
     '            window.setStatusBarContrastEnforced(false);',
     '            window.setNavigationBarContrastEnforced(false);',
     '        }',
+    '        try {',
+    '            android.webkit.WebView wv = (android.webkit.WebView) bridge.getWebView();',
+    '            wv.setVerticalScrollBarEnabled(false);',
+    '            wv.setHorizontalScrollBarEnabled(false);',
+    '        } catch (Throwable t) {',
+    '        }',
     '    }',
     '}',
   ].join('\n');

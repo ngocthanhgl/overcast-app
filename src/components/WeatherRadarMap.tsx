@@ -20,6 +20,12 @@ export default function WeatherRadarMap({ activeLocation, onClose, hapticEnabled
   const [iframeLoading, setIframeLoading] = useState(true);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [isWeakNetwork, setIsWeakNetwork] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setMapReady(true), 400);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
@@ -188,16 +194,18 @@ export default function WeatherRadarMap({ activeLocation, onClose, hapticEnabled
             </div>
           ) : (
             <>
-              {/* Live Embed Iframe */}
-              <iframe
-                key={embedUrl}
-                id="radar-iframe"
-                src={embedUrl}
-                className="w-full h-full border-0 rounded-[28px] select-none relative z-10"
-                style={{ touchAction: 'none' }}
-                allowFullScreen
-                onLoad={() => setIframeLoading(false)}
-              />
+              {/* Live Embed Iframe — mounted after the slide-in animation settles to avoid raster contention jitter */}
+              {mapReady && (
+                <iframe
+                  key={embedUrl}
+                  id="radar-iframe"
+                  src={embedUrl}
+                  className="w-full h-full border-0 rounded-[28px] select-none relative z-10"
+                  style={{ touchAction: 'none' }}
+                  allowFullScreen
+                  onLoad={() => setIframeLoading(false)}
+                />
+              )}
 
               {/* Loading Layer */}
               <AnimatePresence>

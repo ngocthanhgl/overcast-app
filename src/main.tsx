@@ -2,6 +2,7 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import {Capacitor} from '@capacitor/core';
 import {StatusBar, Style} from '@capacitor/status-bar';
+import {App as CapacitorApp} from '@capacitor/app';
 import App from './App.tsx';
 import './index.css';
 import {ErrorBoundary} from './components/ErrorBoundary.tsx';
@@ -10,6 +11,18 @@ async function initNativeSystemBars() {
   try {
     if (!Capacitor.isNativePlatform()) return;
     await StatusBar.setOverlaysWebView({overlay: true});
+    void CapacitorApp.addListener('backButton', ({canGoBack}) => {
+      const handler = (window as unknown as {__overcastBackHandler?: () => void}).__overcastBackHandler;
+      if (typeof handler === 'function') {
+        handler();
+        return;
+      }
+      if (!canGoBack) {
+        CapacitorApp.exitApp();
+      } else {
+        window.history.back();
+      }
+    });
 
     let lastStyle: Style | null = null;
 

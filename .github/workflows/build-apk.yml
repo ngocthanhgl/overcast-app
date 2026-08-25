@@ -30,7 +30,7 @@ jobs:
         run: npm run build
 
       - name: Install Capacitor and assets tool (CI only)
-        run: npm install --no-save @capacitor/core@^6 @capacitor/cli@^6 @capacitor/android@^6 @capacitor/assets
+        run: npm install --no-save @capacitor/core@^6 @capacitor/cli@^6 @capacitor/android@^6 @capacitor/app@^6 @capacitor/assets
 
       - name: Init Capacitor and add Android platform
         run: |
