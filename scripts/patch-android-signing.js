@@ -136,6 +136,55 @@ function patchEdgeToEdge(androidRoot) {
   console.log('Patched', mainActivityPath, 'with edge-to-edge.');
 }
 
+function patchHighRefreshRate(androidRoot) {
+  const mainActivityPath = findFile(require('path').join(androidRoot, 'app', 'src', 'main', 'java'), 'MainActivity.java');
+  if (!mainActivityPath) throw new Error('MainActivity.java not found');
+  let activity = fs.readFileSync(mainActivityPath, 'utf8');
+
+  if (activity.includes('preferredDisplayModeId')) {
+    console.log('High refresh rate already patched in MainActivity, skipping.');
+    return;
+  }
+
+  const anchor = '            window.setNavigationBarContrastEnforced(false);\n        }';
+  if (!activity.includes(anchor)) {
+    throw new Error('Edge-to-edge block not found in ' + mainActivityPath + ' (run edge-to-edge patch first)');
+  }
+
+  const hfrBlock = [
+    '            window.setNavigationBarContrastEnforced(false);',
+    '        }',
+    '        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {',
+    '            android.view.Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();',
+    '            android.view.Display.Mode currentMode = display.getMode();',
+    '            int bestModeId = currentMode.getModeId();',
+    '            float bestRate = currentMode.getRefreshRate();',
+    '            for (android.view.Display.Mode mode : display.getSupportedModes()) {',
+    '                if (mode.getPhysicalWidth() == currentMode.getPhysicalWidth()',
+    '                        && mode.getPhysicalHeight() == currentMode.getPhysicalHeight()',
+    '                        && mode.getRefreshRate() > bestRate) {',
+    '                    bestRate = mode.getRefreshRate();',
+    '                    bestModeId = mode.getModeId();',
+    '                }',
+    '            }',
+    '            if (bestModeId != currentMode.getModeId()) {',
+    '                android.view.WindowManager.LayoutParams params = getWindow().getAttributes();',
+    '                params.preferredDisplayModeId = bestModeId;',
+    '                getWindow().setAttributes(params);',
+    '            }',
+    '        }',
+    '',
+  ].join('\n');
+
+  activity = activity.replace(anchor, hfrBlock);
+  if (!activity.includes('preferredDisplayModeId')) {
+    throw new Error('Failed to inject high refresh rate selection');
+  }
+  fs.writeFileSync(mainActivityPath, activity);
+  console.log('Patched', mainActivityPath, 'with high refresh rate selection.');
+}
+
 patchSigning('android/app/build.gradle');
 patchPermissions('android/app/src/main/AndroidManifest.xml');
 patchEdgeToEdge('android');
+patchHighRefreshRate('android');

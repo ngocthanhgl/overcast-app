@@ -282,7 +282,7 @@ function HourlyForecastBase({ weather, settings }: ForecastProps) {
 
     return (
       <div className="flex flex-col px-0 -mx-[1rem] sm:-mx-[1.3125rem] hourly-forecast" data-no-swipe>
-        <div className="w-[calc(100%-2rem)] max-w-[21.875rem] mx-auto bg-app-surface backdrop-blur-[32px] border border-app-border rounded-[2rem] py-[1.25rem] px-[1rem] sm:px-[1.375rem] flex flex-col gap-[1rem] overflow-hidden shadow-2xl relative">
+        <div className="cv-auto w-[calc(100%-2rem)] max-w-[21.875rem] mx-auto bg-app-surface backdrop-blur-[32px] border border-app-border rounded-[2rem] py-[1.25rem] px-[1rem] sm:px-[1.375rem] flex flex-col gap-[1rem] overflow-hidden shadow-2xl relative">
           
           {/* Header row exactly matching other cards */}
           <div className="flex items-center justify-between select-none">
@@ -541,7 +541,7 @@ function DailyForecastBase({ weather, settings, onOpenDetailed }: DailyForecastP
 
   return (
     <div className="flex flex-col px-0 -mx-[1rem] sm:-mx-[1.3125rem] daily-forecast">
-      <div className="w-[calc(100%-2rem)] max-w-[21.875rem] mx-auto bg-app-surface backdrop-blur-[32px] border border-app-border rounded-[2rem] py-[1.25rem] px-[1rem] sm:px-[1.375rem] flex flex-col gap-[1rem] overflow-hidden shadow-2xl relative">
+      <div className="cv-auto w-[calc(100%-2rem)] max-w-[21.875rem] mx-auto bg-app-surface backdrop-blur-[32px] border border-app-border rounded-[2rem] py-[1.25rem] px-[1rem] sm:px-[1.375rem] flex flex-col gap-[1rem] overflow-hidden shadow-2xl relative">
         <div className="flex items-center justify-between select-none">
           <div className="flex items-center gap-1.5">
             <Icons.Calendar className="w-5 h-5 text-app-text/75" strokeWidth={1.4} />

@@ -104,7 +104,7 @@ function AtmosphereCanvas({ weatherCode, isNight, settings, sunriseISO, sunsetIS
       currentColors.current = targetColors.current.map(c => ({ ...c }));
     }
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
     if (!ctx) return;
 
     const handleResize = () => {

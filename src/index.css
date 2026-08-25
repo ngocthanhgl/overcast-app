@@ -839,3 +839,7 @@ select,
   will-change: transform;
 }
 
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
+}
