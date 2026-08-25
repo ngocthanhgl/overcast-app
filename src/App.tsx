@@ -3443,8 +3443,8 @@ export default function App() {
         className={cn(
           "max-w-[390px] mx-auto px-4 sm:px-[21px] pb-32 min-h-screen relative touch-pan-y bottom-content transition-[opacity,transform,padding-top] duration-250 ease-out",
           state.settings.layoutWeatherDetail === 'compact'
-            ? "pt-[calc(env(safe-area-inset-top,24px)+24px)]"
-            : "pt-[calc(env(safe-area-inset-top,24px)+116px)]",
+            ? "pt-[24px]"
+            : "pt-[116px]",
           isAnyModalOpen ? "pointer-events-none" : ""
         )}
       >

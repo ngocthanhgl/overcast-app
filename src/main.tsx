@@ -10,14 +10,70 @@ async function initNativeSystemBars() {
   try {
     if (!Capacitor.isNativePlatform()) return;
     await StatusBar.setOverlaysWebView({overlay: true});
-    const syncIcons = () => {
-      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-      StatusBar.setStyle({style: dark ? Style.Light : Style.Dark}).catch(() => {});
+
+    let lastStyle: Style | null = null;
+
+    // Average color of the pixels behind the status bar (top strip of the
+    // fullscreen atmosphere canvas), falling back to the painted DOM background.
+    const sampleTopLuminance = (): number => {
+      let r = 0, g = 0, b = 0, sampled = false;
+      const canvas = Array.from(document.querySelectorAll('canvas')).find((cv) => {
+        const rect = cv.getBoundingClientRect();
+        return (
+          getComputedStyle(cv).display !== 'none' &&
+          rect.width >= window.innerWidth * 0.9 &&
+          rect.height >= window.innerHeight * 0.9
+        );
+      });
+      if (canvas) {
+        try {
+          const ctx = canvas.getContext('2d');
+          if (ctx && canvas.width > 0 && canvas.height > 0) {
+            const cw = Math.max(1, Math.min(50, canvas.width));
+            const ch = Math.max(1, Math.min(20, canvas.height));
+            const px = ctx.getImageData(0, 0, cw, ch).data;
+            let sr = 0, sg = 0, sb = 0;
+            for (let i = 0; i < px.length; i += 4) {
+              sr += px[i]; sg += px[i + 1]; sb += px[i + 2];
+            }
+            const n = px.length / 4;
+            r = sr / n; g = sg / n; b = sb / n;
+            sampled = true;
+          }
+        } catch { /* tainted or zero-sized canvas — use DOM fallback */ }
+      }
+      if (!sampled) {
+        r = g = b = 255;
+        let el: HTMLElement | null = document.getElementById('root');
+        while (el) {
+          const m = getComputedStyle(el).backgroundColor.match(
+            /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/
+          );
+          if (m && (m[4] === undefined || parseFloat(m[4]) > 0.05)) {
+            r = +m[1]; g = +m[2]; b = +m[3];
+            break;
+          }
+          el = el.parentElement;
+        }
+      }
+      return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
     };
-    syncIcons();
-    new MutationObserver(syncIcons).observe(document.documentElement, {
+
+    const applyIcons = () => {
+      if (document.hidden) return;
+      const style = sampleTopLuminance() < 0.45 ? Style.Light : Style.Dark;
+      if (style !== lastStyle) {
+        lastStyle = style;
+        StatusBar.setStyle({style}).catch(() => {});
+      }
+    };
+
+    applyIcons();
+    window.setInterval(applyIcons, 2000);
+    document.addEventListener('visibilitychange', applyIcons);
+    new MutationObserver(applyIcons).observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['data-theme'],
+      attributeFilter: ['class', 'style', 'data-theme', 'data-color-theme'],
     });
   } catch {
     return;

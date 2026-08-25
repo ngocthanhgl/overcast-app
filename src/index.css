@@ -575,11 +575,6 @@ body {
   min-height: 100dvh;
 }
 
-/* Top bar — sit just below status bar */
-#ui-overlay, #top-bar, .safe-top {
-  padding-top: calc(env(safe-area-inset-top) + 8px);
-}
-
 /* Bottom content — don't hide behind nav bar */
 .bottom-content,
 #city-dots,
